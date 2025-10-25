@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <h2>Sala de Chat: {{ room.name }}</h2>
+            <h4 class="text-danger">Usuario: {{ request.user }}</h4>
+            <hr>
+
+            {% for i in messages %}
+
+                {% if i.user.username == request.user.username %}
+                <div class="alert alert-primary" role="alert">
+                    {{ i.message }}
+                    <div>
+                        <small class="fst-italic fw-bold">{{ i.user.username }}</small>
+                        <small class="float-end">{{ i.timestamp|date:"d-m-Y H:i:s" }}</small>
+                    </div>
+                </div>
+
+                {% else %}
+
+                <div class="alert alert-success" role="alert">
+                    {{ i.message }}
+                    <div>
+                        <small class="fst-italic fw-bold">{{ i.user.username }}</small>
+                        <small class="float-end">{{ i.timestamp|date:"d-m-Y H:i:s" }}</small>
+                    </div>
+                </div>
+                {% endif %}
+
+            {% endfor %}
+
+            <div id="boxMessages"></div>
+
+            <div id="chat">
+                <input class="form-control" type="text" id="inputMessage" placeholder="Escribe un mensaje...">
+
+                <button class="btn btn-success mt-2" submit id="btnMessage">Enviar</button>
+
+                <a class="btn btn-primary mt-2 float-end" href="{% url 'index' %}">Salir</a>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Usuarios Conectados</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">{{ user }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var user = '{{ request.user }}'
+    var room_id = '{{ room.id }}'
+</script>
+
+<script src="{% static '/js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static '/js/chat.js' %}"></script>
+
+{% endblock %}
